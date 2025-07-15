@@ -1,0 +1,30 @@
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: transaction-filter
+  namespace: default
+spec:
+  type: Scala
+  mode: cluster
+  image: "transaction-filter:2.0"
+  imagePullPolicy: IfNotPresent
+  mainClass: com.example.TransactionFilter
+  mainApplicationFile: "local:///opt/spark/jars/transaction-filter-1.0.jar"
+  arguments:
+    - "/opt/spark/data/transactions.csv"
+  sparkVersion: "3.5.1"
+  restartPolicy:
+    type: Never
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"
+    labels:
+      version: 3.5.1
+    serviceAccount: spark
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+    labels:
+      version: 3.5.1
